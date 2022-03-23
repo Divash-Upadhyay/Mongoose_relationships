@@ -106,7 +106,25 @@ const sectionSchema = new mongoose.Schema(
     }
   });
  
+  app.get("/books/:author_id" ,  async (req,res) =>{
+    try {
+        const book = await Books.find({author_id:req.params.author_id}).lean().exec();
+    
+        return res.send(book);
+      } catch (err) {
+        return res.status(500).send(err.message);
+      }
+  })
 
+  app.get("/books/:section_id" ,  async (req,res) =>{
+    try {
+        const book = await Books.find({section_id:req.params.section_id}).lean().exec();
+    
+        return res.send(book);
+      } catch (err) {
+        return res.status(500).send(err.message);
+      }
+  })
 
 app.listen(2346, async () => {
     try {
