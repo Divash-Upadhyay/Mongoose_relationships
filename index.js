@@ -3,9 +3,10 @@ const mongoose = require('mongoose');
 
 const app =  express();
 
+app.use(express.json());
 
 const connect = () =>{
-    return mongoose.connect("");
+    return mongoose.connect("mongodb+srv://dishu:qwerty123456@evaluation.ubmpk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
 }; 
 
 const sectionSchema = new mongoose.Schema(
@@ -26,6 +27,16 @@ const sectionSchema = new mongoose.Schema(
         id:{type:Number, required:true},
         name:{type:String,required:true},
         body:{type:String, required:true},
+        section_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "section",
+            required: true,
+          },
+          author_id: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "author",
+            required: true,
+          }],
     },
     {
         versionKey: false,
@@ -51,7 +62,50 @@ const sectionSchema = new mongoose.Schema(
   const Author= mongoose.model("author", authorSchema);
 
   
+// CRUD
 
+
+  app.post("/book", async (req, res) => {
+    try {
+      const book = await Books.create(req.body);
+  
+      return res.send(book);
+    } catch (err) {
+      return res.status(500).send(err.message);
+    }
+  });
+
+  app.post("/section", async (req, res) => {
+    try {
+      const section = await Section.create(req.body);
+  
+      return res.send(section);
+    } catch (err) {
+      return res.status(500).send(err.message);
+    }
+  });
+  
+  app.post("/author", async (req, res) => {
+    try {
+      const author = await Author.create(req.body);
+  
+      return res.send(author);
+    } catch (err) {
+      return res.status(500).send(err.message);
+    }
+  });
+
+
+  app.get("/book", async (req, res) => {
+    try {
+      const book = await Books.find().lean().exec();
+  
+      return res.send(book);
+    } catch (err) {
+      return res.status(500).send(err.message);
+    }
+  });
+ 
 
 
 app.listen(2346, async () => {
